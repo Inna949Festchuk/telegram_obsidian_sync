@@ -1,21 +1,20 @@
-# 📱 Telegram Export to Obsidian Converter
+# 📱 Telegram to Obsidian Converter
 
-Конвертирует HTML-экспорт Telegram в заметки Obsidian с полной поддержкой медиафайлов, форматирования и группировки по дням.
+Конвертирует экспорт данных Telegram в заметки Obsidian с полной поддержкой медиафайлов, форматирования и группировки по дням.
 
 ![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## ✨ Возможности
 
-- 📝 **Преобразование сообщений** — все сообщения конвертируются в заметки Obsidian
+- 📝 **Преобразование сообщений** — все сообщения конвертируются в заметки Markdown
 - 🖼️ **Медиафайлы** — фото, видео, стикеры, документы копируются в папку Attachments
 - 🔗 **Ссылки и форматирование** — сохраняются все ссылки, жирный текст, курсив, код
-- 🎭 **Спойлеры** — преобразуются в callout Obsidian или скрытый текст
+- 🎭 **Спойлеры** — преобразуются в callout блоки или скрытый текст
 - 👥 **Контакты** — создаются отдельные заметки для всех контактов
-- 📊 **Dataview поддержка** — расширенный frontmatter для аналитики
-- 📑 **Индексный файл** — главная страница со статистикой и примерами запросов
-- 🚀 **Группировка по дням** — сообщения группируются по датам для лучшей производительности
-- 📂 **Поддержка HTML** — работает с HTML-экспортом Telegram Desktop
+- 📑 **Индексный файл** — главная страница со статистикой экспорта
+- 🚀 **Группировка по дням** — сообщения группируются по датам для лучшей организации
+- 📂 **Поддержка JSON** — работает с JSON-экспортом Telegram Desktop
 
 ---
 
@@ -38,10 +37,6 @@
    *(Прокрутите настройки до самого конца)*
 
 3. **Выберите данные для экспорта:**
-
-   ![Выбор тех данных, которые Вы хотите сохранить.](https://baj.media/wp-content/uploads/2024/06/telegram_eksport_dannykh_3.png)
-   
-   ![Экспорт данных Telegram - выбор типов данных](https://baj.media/wp-content/uploads/2024/06/telegram_eksport_dannykh_5.png)
    
    Рекомендуемые настройки:
    - ✅ **Личные данные** (личные переписки)
@@ -54,7 +49,7 @@
 
 4. **Выберите формат и путь сохранения:**
    
-   - **Формат:** HTML, JSON, оба (рекомендуется)
+   - **Формат:** JSON (обязательно), HTML (опционально)
    - **Размер медиа:** выберите подходящий (для полного экспорта — максимальный)
    - **Путь сохранения:** укажите папку на компьютере
 
@@ -78,7 +73,7 @@
    - Стикеры
    - И т.д.
 
-5. **Выберите формат HTML** и нажмите «Экспортировать»
+5. **Выберите формат JSON** и нажмите «Экспортировать»
 
 ### 📁 Структура экспорта
 
@@ -122,37 +117,6 @@ DataExport_YYYY-MM-DD/
    - Укажите имя и расположение папки
    - Нажмите «Create»
 
-### 🔌 Рекомендуемые плагины
-
-После установки Obsidian рекомендуется включить следующие плагины:
-
-#### Обязательные плагины:
-
-1. **Dataview**
-   - **Зачем нужен:** Для аналитики и запросов к вашим данным
-   - **Установка:** Settings → Community plugins → Browse → поиск "Dataview" → Install → Enable
-   - 🔗 [Dataview Documentation](https://blacksmithgu.github.io/obsidian-dataview/)
-
-2. **Obsidian Attachment Management**
-   - **Зачем нужен:** Для удобного управления медиафайлами
-   - **Установка:** Settings → Community plugins → Browse → поиск "Attachment Management"
-
-3. **Better Word Count**
-   - **Зачем нужен:** Подсчет слов и символов в заметках
-   - **Установка:** Settings → Community plugins → Browse → поиск "Better Word Count"
-
-#### Дополнительные плагины:
-
-4. **Calendar**
-   - Показывает календарь с днями, когда были созданы заметки
-   - Удобная навигация по сообщениям по датам
-
-5. **QuickAdd**
-   - Быстрое создание заметок и выполнение скриптов
-
-6. **Templater**
-   - Создание шаблонов для новых заметок
-
 ---
 
 ## 🔧 Шаг 3: Установка конвертера
@@ -186,7 +150,7 @@ pip install -r requirements.txt
 
 Или вручную:
 ```bash
-pip install beautifulsoup4==4.12.3 python-dotenv==1.0.0
+pip install python-dotenv==1.0.0
 ```
 
 ---
@@ -198,10 +162,10 @@ pip install beautifulsoup4==4.12.3 python-dotenv==1.0.0
 Создайте файл `.env` в папке со скриптом:
 
 ```env
-# Путь к JSON файлу экспорта Telegram (для метаданных)
+# Путь к JSON файлу экспорта Telegram
 TELEGRAM_JSON_FILE=/home/konstantin/Загрузки/Telegram Desktop/DataExport_2026-03-26/result.json
 
-# Корневая папка, где лежат медиафайлы и HTML
+# Корневая папка, где лежат медиафайлы
 TELEGRAM_EXPORT_BASE=/home/konstantin/Загрузки/Telegram Desktop/DataExport_2026-03-26
 
 # Папка для сохранения заметок Obsidian
@@ -219,10 +183,10 @@ CREATE_INDEX=true
 # Создавать ли заметки контактов
 CREATE_CONTACTS=true
 
-# Добавлять ли frontmatter (обязательно true для Dataview)
+# Добавлять ли frontmatter (метаданные YAML)
 CREATE_FRONTMATTER=true
 
-# Преобразовывать ли спойлеры в callout Obsidian
+# Преобразовывать ли спойлеры в callout блоки
 SPOILER_AS_CALLOUT=true
 
 # Группировать сообщения по дням (рекомендуется для больших экспортов)
@@ -236,15 +200,15 @@ MIN_MESSAGES_PER_DAY=1
 
 | Параметр | Описание | Значения |
 |----------|----------|----------|
-| `TELEGRAM_JSON_FILE` | Путь к файлу result.json (для метаданных чатов) | путь к файлу |
+| `TELEGRAM_JSON_FILE` | Путь к файлу result.json | путь к файлу |
 | `TELEGRAM_EXPORT_BASE` | Корневая папка экспорта Telegram | путь к папке |
 | `OBSIDIAN_OUTPUT_DIR` | Папка для сохранения заметок | путь к папке |
 | `COPY_MEDIA` | Копировать ли медиафайлы | true/false |
 | `COPY_PROFILE_PICS` | Копировать ли аватарки | true/false |
 | `CREATE_INDEX` | Создавать ли индексный файл | true/false |
 | `CREATE_CONTACTS` | Создавать ли заметки контактов | true/false |
-| `CREATE_FRONTMATTER` | Добавлять ли frontmatter | true/false |
-| `SPOILER_AS_CALLOUT` | Спойлеры как callout Obsidian | true/false |
+| `CREATE_FRONTMATTER` | Добавлять ли metаданные YAML | true/false |
+| `SPOILER_AS_CALLOUT` | Спойлеры как callout блоки | true/false |
 | `GROUP_BY_DAY` | Группировать сообщения по дням | true/false |
 | `MIN_MESSAGES_PER_DAY` | Мин. сообщений для файла дня | число |
 
@@ -260,12 +224,11 @@ python telegram_to_obsidian.py
 
 ### Процесс конвертации
 
-1. Скрипт загружает JSON файл экспорта (для метаданных чатов)
-2. Сканирует папку `chats/` для поиска HTML файлов сообщений
-3. Парсит HTML файлы с помощью BeautifulSoup
-4. Копирует медиафайлы из `chats/chat_XXX/photos/`, `stickers/`, `video_files/`
-5. Создаёт заметки контактов
-6. Формирует индексный файл
+1. Скрипт загружает JSON файл экспорта
+2. Генерирует файл `patch.txt` для индексации медиафайлов
+3. Копирует медиафайлы из `chats/chat_XXX/photos/`, `stickers/`, `video_files/`
+4. Создаёт заметки контактов
+5. Формирует индексный файл
 
 ### 📁 Структура выходных данных
 
@@ -302,124 +265,42 @@ Telegram_Export/
 
 ---
 
-## 📊 Frontmatter для Dataview
+## 📊 Frontmatter (метаданные YAML)
 
-Каждая заметка содержит расширенный frontmatter для работы с плагином Dataview:
+Каждая заметка содержит метаданные для удобной организации:
 
 ```yaml
 ---
-# Основные поля
 chat_type: personal_chat          # Тип чата
 chat_name: Иван Петров             # Имя чата
 chat_id: 123456789                # ID чата
-date: 2023-10-15                  # Дата сообщений (при группировке по дням)
-message_count: 42                 # Количество сообщений за день
-
-# Теги
+date: 2023-10-15                  # Дата сообщений
+message_count: 42                 # Количество сообщений
 tags:
   - telegram
   - personal_chat
-  - chat_ivan_petrov
 ---
-```
-
----
-
-## 🔍 Примеры Dataview запросов
-
-### 1. Последние 20 дней с сообщениями
-
-```dataview
-TABLE date AS "Дата", chat_name AS "Чат", message_count AS "Сообщений"
-FROM "Telegram_Export"
-SORT date DESC
-LIMIT 20
-```
-
-### 2. Чаты с наибольшим количеством сообщений
-
-```dataview
-TABLE sum(message_count) AS "Всего сообщений"
-FROM "Telegram_Export"
-GROUP BY chat_name
-SORT sum(message_count) DESC
-LIMIT 10
-```
-
-### 3. Сообщения с медиафайлами
-
-```dataview
-TABLE date AS "Дата", chat_name AS "Чат"
-FROM "Telegram_Export"
-WHERE contains(file.name, "Attachments")
-SORT date DESC
-LIMIT 50
-```
-
-### 4. Ежедневная активность (DataviewJS)
-
-```javascript
-const messages = dv.pages('"Telegram_Export"')
-  .where(p => p.date)
-  .groupBy(p => p.date);
-
-let daily = [];
-for (let group of messages) {
-  daily.push({
-    date: group.key,
-    count: group.rows.values.reduce((sum, p) => sum + (p.message_count || 0), 0)
-  });
-}
-
-daily.sort((a, b) => b.date.localeCompare(a.date));
-dv.table(
-  ["Дата", "Сообщений"],
-  daily.slice(0, 30).map(d => [d.date, d.count])
-);
-```
-
-### 5. Дашборд с общей статистикой (DataviewJS)
-
-```javascript
-const allPages = dv.pages('"Telegram_Export"');
-const totalDays = allPages.length;
-const totalMessages = allPages.values.reduce((sum, p) => sum + (p.message_count || 0), 0);
-const chats = allPages.values.map(p => p.chat_name).unique().length;
-
-dv.paragraph(`
-## 📊 Общая статистика
-
-- **Всего дней:** ${totalDays}
-- **Всего сообщений:** ${totalMessages.toLocaleString()}
-- **Всего чатов:** ${chats}
-- **Среднее сообщений в день:** ${Math.round(totalMessages/totalDays)}
-`);
 ```
 
 ---
 
 ## 🎯 Рекомендации по использованию в Obsidian
 
-### 1. Установите необходимые плагины
+### 1. Откройте папку экспорта в Obsidian
 
-- **Dataview** — для продвинутой аналитики и запросов
-- **Obsidian Attachment Management** — для управления медиафайлами
-- **Better Word Count** — для подсчёта слов и символов
-- **Calendar** — для навигации по датам
+- Запустите Obsidian
+- Выберите «Open folder as vault»
+- Укажите папку `Telegram_Export` или добавьте её в существующее хранилище
 
-### 2. Создайте дашборд
+### 2. Используйте поиск
 
-Создайте новую заметку `Dashboard.md` и добавьте туда свои Dataview запросы для быстрого доступа к статистике.
+**Obsidian Search** позволяет быстро находить сообщения по тексту, датам и контактам.
 
-### 3. Настройте шаблоны
-
-Создайте шаблоны для новых заметок с нужным frontmatter.
-
-### 4. Используйте граф связей
+### 3. Используйте граф связей
 
 **Obsidian Graph View** покажет связи между сообщениями, контактами и тегами.
 
-### 5. Настройте горячие клавиши
+### 4. Настройте горячие клавиши
 
 Настройте горячие клавиши для быстрого поиска и навигации.
 
@@ -433,20 +314,14 @@ dv.paragraph(`
 - Проверьте путь `TELEGRAM_EXPORT_BASE` в `.env`
 - Убедитесь, что файлы существуют в папке `chats/chat_XXX/photos/`
 - Проверьте права на запись в папку вывода
+- Удалите файл `patch.txt` и запустите скрипт заново для переиндексации
 
 ### Проблема: Не создаются заметки
 
 **Решение:**
 - Проверьте права на запись в папку вывода
-- Убедитесь, что HTML файлы существуют в папке экспорта
+- Убедитесь, что JSON файл существует в папке экспорта
 - Проверьте свободное место на диске
-
-### Проблема: Dataview не видит поля
-
-**Решение:**
-- Убедитесь, что `CREATE_FRONTMATTER=true` в `.env`
-- Перезапустите скрипт для обновления frontmatter
-- Проверьте, что заметки находятся в правильной папке
 
 ### Проблема: Медленная работа
 
@@ -468,7 +343,6 @@ dv.paragraph(`
 
 | Пакет | Версия | Назначение |
 |-------|--------|------------|
-| beautifulsoup4 | 4.12.3 | Парсинг HTML |
 | python-dotenv | 1.0.0 | Загрузка переменных окружения |
 
 ---
@@ -483,12 +357,6 @@ dv.paragraph(`
 - [Obsidian.md](https://obsidian.md/) — официальный сайт
 - [Obsidian Download](https://obsidian.md/download) — скачать Obsidian
 - [Obsidian Help](https://help.obsidian.md/) — документация
-- [Obsidian Plugins](https://obsidian.md/plugins) — сообщество плагинов
-
-### Плагины Obsidian
-- [Dataview](https://blacksmithgu.github.io/obsidian-dataview/) — документация
-- [Templater](https://silentvoid13.github.io/Templater/) — шаблоны
-- [QuickAdd](https://github.com/chhoumann/quickadd) — быстрое создание заметок
 
 ---
 
@@ -552,3 +420,25 @@ SOFTWARE.
 
 **Сделано с ❤️ для сообщества Obsidian и Telegram**
 
+
+привет друг! скажи мне, если я запущу CLI из папки с моими заметками .md obsidian ты сможешь использовать их как базу знаний?
+
+
+Thinking
+Привет! Да, я могу работать с твоими заметками Obsidian (.md файлами) как с базой знаний.
+
+У тебя есть несколько вариантов:
+
+Прямой доступ к файлам — я могу читать .md файлы из твоей папки Obsidian через инструменты read_file, glob, grep_search. Это работает для текущей директории и подпапок.
+
+Если папка Obsidian в другом месте — ты можешь:
+
+Скопировать/переместить заметки в текущую папку
+Или указать мне путь к папке (если она доступна из текущей сессии)
+Использовать агент для поиска — для сложных запросов по всей базе заметок я могу запустить агента с инструментом Explore, который быстро найдёт нужную информацию по паттернам или ключевым словам.
+
+Ограничения:
+
+Я не могу автоматически индексировать или создавать постоянную базу знаний — каждый запрос обрабатывается заново
+Для больших баз (1000+ файлов) поиск может занять время
+Хочешь попробовать? Укажи путь к папке с заметками или скажи, какую информацию нужно найти.

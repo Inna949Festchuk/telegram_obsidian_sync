@@ -1,0 +1,13 @@
+venv
+
+config.py
+get_api_keys.py
+main.py
+note_formatter.py
+sync_manager.py
+
+__pycache__
+
+Telegram-API-Getter
+
+patch.txt

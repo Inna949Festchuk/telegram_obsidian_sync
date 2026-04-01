@@ -2,10 +2,11 @@
 
 Конвертирует экспорт данных Telegram в заметки Obsidian с полной поддержкой медиафайлов, форматирования, группировки по дням и **AI-интеграции для умного поиска**.
 
-![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg) 
+![License](https://img.shields.io/badge/license-MIT-green.svg) 
 ![Ollama](https://img.shields.io/badge/Ollama-Ready-green.svg)
 
+![Записи группы](blog.png)
 ---
 
 ## ✨ Возможности
@@ -21,6 +22,7 @@
 - 🧠 **AI-интеграция** — подключение Ollama (локально) или онлайн LLM для умного поиска по заметкам
 
 ---
+![Клон ваших мозгов](graf.png)
 
 ## 📥 Шаг 1: Экспорт данных из Telegram
 

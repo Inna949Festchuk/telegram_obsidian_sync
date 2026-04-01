@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Telegram Export to Obsidian Converter
-Конвертирует экспорт Telegram в заметки Obsidian с полной поддержкой Dataview.
+Конвертирует экспорт Telegram в заметки Obsidian с полной поддержкой медиафайлов.
 Автоматически генерирует patch.txt для индексации медиафайлов.
+Медиафайлы копируются в папку заметки.
 """
 import json
 import os
@@ -230,7 +231,8 @@ class TelegramToObsidian:
     def copy_media_file(self, source_path: str, target_subdir: str = "Attachments",
                         note_folder: Path = None) -> Optional[str]:
         """
-        🆕 Копирует файл медиа в целевую папку, возвращает относительный путь
+        🆕 Копирует файл медиа в папку заметки
+        Возвращает только имя файла (так как медиа в той же папке что и заметка)
         """
         if not COPY_MEDIA or not source_path:
             return None
@@ -246,8 +248,12 @@ class TelegramToObsidian:
             print(f"      ⚠️  Файл не найден: {source_path}")
             return None
         
-        # Создаем целевую директорию
-        target_dir = OUTPUT_DIR / target_subdir
+        # 🆕 Целевая директория — папка заметки
+        if note_folder:
+            target_dir = note_folder
+        else:
+            target_dir = OUTPUT_DIR / target_subdir
+        
         target_dir.mkdir(parents=True, exist_ok=True)
         
         # Формируем имя целевого файла
@@ -267,28 +273,19 @@ class TelegramToObsidian:
             shutil.copy2(source_file, target_file)
             self.stats['media_files'] += 1
             
-            # 🆕 Возвращаем простой относительный путь от корня хранилища
-            result_path = f"{target_subdir}/{source_file.name}"
+            # 🆕 Возвращаем только имя файла (так как медиа в той же папке)
+            result_path = source_file.name
             
             # Сохраняем в кэш
             self.media_cache[source_path] = {
                 'obsidian': result_path,
                 'source': str(source_file)
             }
-            print(f"      ✅ Скопировано: {source_file.name} → {result_path}")
+            print(f"      ✅ Скопировано: {source_file.name} → {target_dir.name}/{result_path}")
             return result_path
         except Exception as e:
             print(f"      ⚠️  Ошибка копирования {source_file.name}: {e}")
             return None
-    
-    def _get_relative_media_path(self, note_folder: Path) -> str:
-        """Вычисляет относительный путь от заметки к папке Attachments"""
-        attachments = OUTPUT_DIR / "Attachments"
-        try:
-            relative = Path(os.path.relpath(attachments, note_folder))
-            return str(relative).replace('\\', '/')
-        except ValueError:
-            return "Attachments"
     
     def html_to_markdown(self, html_content: str) -> str:
         """Преобразует HTML в Markdown"""
@@ -544,11 +541,13 @@ class TelegramToObsidian:
             media_type = msg.get('media_type')
         
         if file_path and "(File not included" not in str(file_path):
+            # 🆕 Передаём note_folder чтобы медиа копировалось в папку заметки
             copied_path = self.copy_media_file(file_path, "Attachments", note_folder)
             
             if copied_path:
                 file_name = msg.get('file_name', Path(file_path).name)
                 
+                # 🆕 Ссылка только на имя файла (медиа в той же папке)
                 if media_type in ['photo', 'sticker', 'animation', 'video_message']:
                     content.append(f"![{file_name}]({copied_path})\n\n")
                 elif media_type == 'video_file':
@@ -623,6 +622,7 @@ class TelegramToObsidian:
         print(f"  [{index}/{total}] {chat_type}: {chat_name} ({len(messages)} сообщений)")
         
         if not messages:
+            print(f"      ⚠️  Пропущено: {chat_name} (0 сообщений)")
             return
         
         if GROUP_BY_DAY:
@@ -688,7 +688,7 @@ class TelegramToObsidian:
                     print(f"      ❌ Ошибка сообщения {msg_id}: {e}")
     
     def copy_profile_pictures(self, data: Dict):
-        """Копирует фотографии профиля"""
+        """🆕 Копирует фотографии профиля"""
         if not COPY_PROFILE_PICS:
             return
         
@@ -702,11 +702,10 @@ class TelegramToObsidian:
         
         for pic in profile_pics:
             photo_path = pic.get('photo')
-            if photo_path and photo_path != "(File not included. Change data exporting settings to download.)":
+            if photo_path and "(File not included" not in str(photo_path):
                 self.copy_media_file(photo_path, "Profile")
         
         print(f"  ✅ Скопировано {len(profile_pics)} аватарок")
-    
     
     def create_contact_notes(self, data: Dict):
         """Создает заметки для контактов"""

@@ -1,12 +1,13 @@
-# 📱 Telegram to Obsidian Converter
+# 📱 AI-agents: Telegram to Obsidian Converter for Smart Search and Note Analytics
+*ИИ-анент: Конвертер Telegram в Obsidian для интеллектуального поиска и анализа заметок*
 
-Конвертирует экспорт данных Telegram в заметки Obsidian с полной поддержкой медиафайлов, форматирования, группировки по дням и **AI-интеграции для умного поиска**.
+Конвертирует экспорт данных Telegram в заметки Obsidian с полной поддержкой медиафайлов, форматирования, группировки по дням и AI-интеграции для умного поиска и аналитики.
 
-![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg) 
-![License](https://img.shields.io/badge/license-MIT-green.svg) 
+![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Ollama](https://img.shields.io/badge/Ollama-Ready-green.svg)
+![SiliconFlow](https://img.shields.io/badge/SiliconFlow-Ready-green.svg)
 
-![Записи группы](blog.png)
 ---
 
 ## ✨ Возможности
@@ -19,10 +20,11 @@
 - 📑 **Индексный файл** — главная страница со статистикой экспорта
 - 🚀 **Группировка по дням** — сообщения группируются по датам для лучшей организации
 - 📂 **Поддержка JSON** — работает с JSON-экспортом Telegram Desktop
-- 🧠 **AI-интеграция** — подключение Ollama (локально) или онлайн LLM для умного поиска по заметкам
+- 🧠 **AI-интеграция** — подключение Obsidian Copilot для умного поиска и аналитики по заметкам
 
 ---
-![Клон ваших мозгов](graf.png)
+
+![Умная аналитика по хранилищу обсидиагн](2.png)
 
 ## 📥 Шаг 1: Экспорт данных из Telegram
 
@@ -81,6 +83,10 @@
 
 5. **Выберите формат JSON** и нажмите «Экспортировать»
 
+### ⚠️ Важное примечание о каналах
+
+Telegram экспортирует **только ваши сообщения** в каналах. Если вы подписчик канала (не администратор), экспорт будет пустым (`No outgoing messages`). Это ограничение Telegram, а не конвертера.
+
 ### 📁 Структура экспорта
 
 После экспорта вы получите папку со следующей структурой:
@@ -96,7 +102,7 @@ DataExport_YYYY-MM-DD/
 │   └── chat_002/
 │       └── ...
 ├── profile_pictures/
-└── ...
+└── export_results.html
 ```
 
 **Важно:** Убедитесь, что в экспорте присутствует файл `result.json` — он необходим для работы конвертера!
@@ -220,81 +226,105 @@ MIN_MESSAGES_PER_DAY=1
 
 ---
 
-## 🧠 Шаг 4: Настройка AI для умного поиска (Опционально)
+## 🧠 Шаг 4: Настройка AI для умного поиска
 
-Для подключения умного поиска по заметкам через нейросеть выполните следующие шаги:
+### 4.1 Установка плагина Obsidian Copilot
 
-### 4.1 Установка Ollama (локальная модель)
+Для AI-поиска по заметкам используется плагин **Obsidian Copilot**.
 
-```bash
-# Установка Ollama
-curl -fsSL https://ollama.ai/install.sh | sh
+#### Установка плагина
 
-# Проверка установки
-ollama --version
-
-# Запуск Ollama
-ollama serve
 ```
-
-### 4.2 Скачивание моделей
-
-```bash
-# Модель для эмбеддингов (поиск по смыслу)
-ollama pull nomic-embed-text
-
-# Модель для чата (лёгкая, для 8 GB RAM)
-ollama pull llama3.2:1b
-
-# Проверка загруженных моделей
-ollama list
+1. Obsidian → Настройки → Community plugins
+2. Отключите "Restricted mode" если включён
+3. Browse → Поиск "Copilot"
+4. Install → Enable
 ```
+![Добавление модели на вкладке Basic](basic.png)
+![Настройка локальной большой языковой модели чата](addllm.png)
 
-### 4.3 Установка плагина Smart Connections в Obsidian
+### 4.2 Настройка эмбеддингов (SiliconFlow + Qwen)
 
-1. Откройте **Obsidian**
-2. Перейдите в **Настройки → Community plugins**
-3. Нажмите **Browse**
-4. Найдите **"Smart Connections"**
-5. Нажмите **Install → Enable**
+```
+Настройки → Copilot → Embedding Settings:
+┌─────────────────────────────────────────────────────────┐
+│  Embedding Provider: SiliconFlow                        │
+│  API Key: sk-xxxxxxxxxxxxxxxx                           │
+│  Model: Qwen/Qwen3-Embedding-0.6B                       │
+└─────────────────────────────────────────────────────────┘
+```
+![Настройка эмбенддинговой модели](embmodel.png)
 
-### 4.4 Настройка Smart Connections
+**Получение API ключа:**
+1. Перейдите на [https://cloud.siliconflow.cn](https://cloud.siliconflow.cn)
+2. Зарегистрируйтесь
+3. Получите API ключ в разделе API Keys
+
+### 4.3 ⚠️ Критически важные настройки для больших хранилищ
+
+Для хранилищ с 10 000+ файлов **обязательно** настройте:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Smart Connections Settings                             │
+│  Advanced Settings (КРИТИЧНО!)                         │
 ├─────────────────────────────────────────────────────────┤
-│  API Provider: Ollama                                   │
-│  Base URL: http://localhost:11434                       │
-│  Embedding Model: nomic-embed-text                      │
-│  Chat Model: llama3.2:1b                                │
-│  Context Size: 4096                                     │
-│  Temperature: 0.7                                       │
+│  Requests per Minute: 10        ← Уменьшить с 60       │
+│  Embedding Batch Size: 2        ← Уменьшить с 16 ❗    │
+│  Number of Partitions: 1-2      ← Для больших vaults   │
+│  Lexical Search RAM Limit: 50   ← Уменьшить с 100 MB   │
 └─────────────────────────────────────────────────────────┘
 ```
 
-1. Нажмите **Re-index all notes**
-2. Дождитесь завершения индексации (может занять 5-30 минут)
+**Почему это важно:**
+- `Batch Size: 2` предотвращает краши при индексации
+- `Requests per Minute: 10` избегает лимитов API SiliconFlow
+- `RAM Limit: 50 MB` снижает нагрузку на систему
 
-### 4.5 Альтернативные варианты подключения LLM
+### 4.4 Настройка чата (опционально)
+
+```
+Chat Settings:
+• Provider: SiliconFlow (или Ollama для локальной работы)
+• Model: Qwen/Qwen3.5-72B-Instruct (онлайн) или llama3.2:1b (локально)
+• API Key: ваш ключ SiliconFlow
+```
+
+
+### 4.5 Запуск индексации
+
+```
+1. Убедитесь, что API ключ настроен
+2. Настройки → Copilot → Advanced
+3. Нажмите "Purge and Reindex" или "Re-index vault"
+4. Дождитесь завершения (может занять несколько часов для 18 000 файлов)
+```
+![Индексация хранилища](index.png)
+
+**Мониторинг прогресса:**
+- Откройте Developer Console: `Ctrl+Shift+I`
+- Следите за логами плагина `plugin:copilot`
+- Прогресс сохраняется автоматически
+
+### 4.6 Альтернативные варианты подключения LLM
 
 Если вы хотите использовать другие модели (онлайн или локальные), ознакомьтесь с дополнительными документами:
 
 | Документ | Описание | Ссылка |
 |----------|----------|--------|
-| 🧠 **Локально vs Онлайн** | Сравнение всех вариантов подключения, требования к железу, стоимость | [`🧠 Настройка AI для Obsidian: Локально vs Онлайн.md`](./🧠%20Настройка%20AI%20для%20Obsidian:%20Локально%20vs%20Онлайн.md) |
-| 🇨🇳 **Qwen 3.5 + DeepSeek** | Настройка китайских моделей через API (дешевле GPT-4) | [`🇨🇳 Настройка AI для Obsidian: Qwen 3.5 и DeepSeek (Онлайн).md`](./🇨🇳%20Настройка%20AI%20для%20Obsidian:%20Qwen%203.5%20и%20DeepSeek%20(Онлайн).md) |
-| 🇷🇺 **Sber GigaChat** | Настройка российской нейросети GigaChat (серверы в РФ, 152-ФЗ) | [`🇷🇺 Настройка AI для Obsidian: nomic-embed + Sber GigaChat.md`](./🇷🇺%20Настройка%20AI%20для%20Obsidian:%20nomic-embed%20+%20Sber%20GigaChat.md) |
+| 🧠 Локально vs Онлайн | Сравнение всех вариантов подключения, требования к железу, стоимость | [`🧠 Настройка AI для Obsidian: Локально vs Онлайн.md`](./🧠%20Настройка%20AI%20для%20Obsidian:%20Локально%20vs%20Онлайн.md) |
+| 🇨🇳 Qwen 3.5 + DeepSeek | Настройка китайских моделей через API (дешевле GPT-4) | [`🇨🇳 Настройка AI для Obsidian: Qwen 3.5 и DeepSeek (Онлайн).md`](./🇨🇳%20Настройка%20AI%20для%20Obsidian:%20Qwen%203.5%20и%20DeepSeek%20(Онлайн).md) |
+| 🇷🇺 Sber GigaChat | Настройка российской нейросети GigaChat (серверы в РФ, 152-ФЗ) | [`🇷🇺 Настройка AI для Obsidian: nomic-embed + Sber GigaChat.md`](./🇷🇺%20Настройка%20AI%20для%20Obsidian:%20nomic-embed%20+%20Sber%20GigaChat.md) |
 
-### 4.6 Сравнение вариантов
+### 4.7 Сравнение вариантов
 
 | Вариант | Эмбеддинги | Чат | Цена/месяц | RAM | Приватность |
 |---------|------------|-----|------------|-----|-------------|
-| **Ollama (локально)** | nomic-embed-text | llama3.2:1b | $0 | 4-6 GB | ✅ Полная |
-| **Groq (онлайн)** | nomic-embed-text | llama-3.1-8b | $0* | 2-4 GB | ⚠️ США |
-| **Qwen 3.5 (онлайн)** | nomic-embed-text | qwen-3.5-72b | ~$30 | 2-4 GB | ⚠️ Китай |
-| **DeepSeek (онлайн)** | nomic-embed-text | deepseek-chat | ~$15 | 2-4 GB | ⚠️ Китай |
-| **GigaChat (онлайн)** | nomic-embed-text | GigaChat-Pro | ~₽2,650 | 2-4 GB | ✅ Россия |
+| Ollama (локально) | nomic-embed-text | llama3.2:1b | $0 | 4-6 GB | ✅ Полная |
+| Groq (онлайн) | nomic-embed-text | llama-3.1-8b | $0* | 2-4 GB | ⚠️ США |
+| Qwen 3.5 (онлайн) | nomic-embed-text | qwen-3.5-72b | ~$30 | 2-4 GB | ⚠️ Китай |
+| DeepSeek (онлайн) | nomic-embed-text | deepseek-chat | ~$15 | 2-4 GB | ⚠️ Китай |
+| GigaChat (онлайн) | nomic-embed-text | GigaChat-Pro | ~₽2,650 | 2-4 GB | ✅ Россия |
+| **SiliconFlow (онлайн)** | **Qwen3-Embedding-0.6B** | **Qwen3.5** | **~$5-10** | **2-4 GB** | **⚠️ Китай** |
 
 *Groq имеет бесплатный тариф с лимитами
 
@@ -321,10 +351,6 @@ python telegram_to_obsidian.py
 ```
 Telegram_Export/
 ├── Index.md                           # Главная страница
-├── Attachments/                       # Все медиафайлы
-│   ├── photo_123.jpg
-│   ├── video_456.mp4
-│   └── document_789.pdf
 ├── Profile/                           # Аватарки
 │   └── avatar.jpg
 ├── Contacts/                          # Заметки контактов
@@ -332,22 +358,25 @@ Telegram_Export/
 │   └── Анна Сидорова.md
 ├── Saved Messages/                    # Сохранённые сообщения
 │   ├── 2023-10-15.md                  # Все сообщения за день
-│   └── ...
+│   ├── photo_123.jpg                  # 🆕 Медиа в той же папке!
+│   └── video_456.mp4
 ├── Personal Chats/                    # Личные чаты
 │   └── Иван Петров/
 │       ├── 2023-10-15.md              # Все сообщения за день
-│       └── ...
+│       └── photo_789.jpg              # 🆕 Медиа рядом с заметкой
 ├── Groups/                            # Группы
 │   └── Работа/
 │       ├── 2023-10-15.md
-│       └── ...
+│       └── document.pdf
 ├── Channels/                          # Каналы
 │   └── Новости/
 │       ├── 2023-10-15.md
-│       └── ...
+│       └── photo_913.jpg
 └── Other Chats/                       # Остальные чаты
     └── ...
 ```
+
+> **Важно:** Медиафайлы копируются в ту же папку, где находится заметка. Ссылки в Markdown используют относительные пути: `![img](photo.jpg)`, а не `![img](Attachments/photo.jpg)`.
 
 ---
 
@@ -378,30 +407,35 @@ tags:
 - Выберите «Open folder as vault»
 - Укажите папку `Telegram_Export` или добавьте её в существующее хранилище
 
+![Открытие экспорта](blog.png)
+
 ### 2. Используйте поиск
 
 **Obsidian Search** позволяет быстро находить сообщения по тексту, датам и контактам.
 
-### 3. Используйте AI-поиск (Smart Connections)
+### 3. Используйте AI-поиск (Copilot)
 
-После настройки Ollama и плагина Smart Connections:
+После настройки SiliconFlow и плагина Copilot:
 
-- Откройте Command Palette (Ctrl+P)
-- Введите: **"Smart Connections: Chat"**
-- Задайте вопрос: *"Что я сохранил про Python?"*
-- Получите ответ с ссылками на соответствующие заметки
+```
+1. Откройте Command Palette (Ctrl+P)
+2. Введите: "Copilot: Chat"
+3. Задайте вопрос: "Что я сохранил про Python?"
+4. Получите ответ с ссылками на соответствующие заметки
+```
+![Чат с базой знвани](4.png)
 
 ### 4. Используйте граф связей
 
 **Obsidian Graph View** покажет связи между сообщениями, контактами и тегами.
+
+![Граф связей](graf.png)
 
 ### 5. Настройте горячие клавиши
 
 Настройте горячие клавиши для быстрого поиска и навигации.
 
 ---
-
-![Поиска по базе знаний с применением чата LLM (Расширение  Copilot Obsidian)](4.png)
 
 ## 🐛 Устранение неполадок
 
@@ -434,13 +468,29 @@ tags:
 - Убедитесь, что файл `result.json` существует в папке экспорта
 - Проверьте кодировку файла (должна быть UTF-8)
 
-### Проблема: AI-поиск не работает
+### Проблема: Copilot не индексирует или падает
 
 **Решение:**
-- Проверьте, что Ollama запущен: `ollama serve`
-- Проверьте модели: `ollama list`
-- Перезапустите плагин Smart Connections
-- Нажмите **Re-index all notes** в настройках плагина
+- ✅ Установите `Embedding Batch Size: 2` (критично!)
+- ✅ Установите `Requests per Minute: 10`
+- ✅ Проверьте API ключ SiliconFlow в настройках
+- ✅ Увеличьте `Lexical Search RAM Limit` если мало памяти
+- ✅ Откройте Developer Console (`Ctrl+Shift+I`) для просмотра ошибок
+- ✅ Очистите кэш: "Purge and Reindex" и запустите заново
+
+### Проблема: "429 Too Many Requests" от SiliconFlow
+
+**Решение:**
+- Уменьшите `Requests per Minute` до 5-10
+- Подождите сброса лимитов (обычно в 00:00 UTC)
+- Проверьте квоты в панели управления SiliconFlow
+
+### Проблема: Пустые каналы в экспорте
+
+**Решение:**
+- Это ограничение Telegram — экспортируются только ваши сообщения
+- Для каналов вы должны быть администратором или автором сообщений
+- Альтернатива: пересылайте важные посты в "Сохранённые сообщения"
 
 ---
 
@@ -452,10 +502,11 @@ tags:
 
 ### Для AI-интеграции (опционально)
 
-| Пакет | Версия | Назначение |
-|-------|--------|------------|
-| Ollama | latest | Локальные LLM модели |
-| Smart Connections | latest | Плагин Obsidian для AI-поиска |
+| Пакет/Плагин | Версия | Назначение |
+|--------------|--------|------------|
+| Obsidian Copilot | latest | Плагин для AI-поиска и чата |
+| SiliconFlow API | - | Онлайн эмбеддинги Qwen |
+| Ollama | latest | Локальные LLM модели (опционально) |
 
 ---
 
@@ -469,9 +520,10 @@ tags:
 - [Obsidian.md](https://obsidian.md/) — официальный сайт
 - [Obsidian Download](https://obsidian.md/download) — скачать Obsidian
 - [Obsidian Help](https://help.obsidian.md/) — документация
-- [Smart Connections Plugin](https://github.com/brianpetro/obsidian-smart-connections) — плагин для AI-поиска
+- [Obsidian Copilot](https://github.com/logancyang/obsidian-copilot) — плагин для AI
 
 ### AI/LLM
+- [SiliconFlow](https://cloud.siliconflow.cn) — API для Qwen эмбеддингов
 - [Ollama](https://ollama.ai/) — локальные модели
 - [🧠 Настройка AI: Локально vs Онлайн](./🧠%20Настройка%20AI%20для%20Obsidian:%20Локально%20vs%20Онлайн.md)
 - [🇨🇳 Настройка AI: Qwen 3.5 + DeepSeek](./🇨🇳%20Настройка%20AI%20для%20Obsidian:%20Qwen%203.5%20и%20DeepSeek%20(Онлайн).md)
@@ -542,4 +594,3 @@ SOFTWARE.
 ---
 
 *Последнее обновление: Апрель 2026*
-

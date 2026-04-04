@@ -1,5 +1,5 @@
-# 📱 AI-agents: Telegram to Obsidian Converter for Smart Search and Note Analytics
-*ИИ-анент: Конвертер Telegram в Obsidian для интеллектуального поиска и анализа заметок*
+# 📱 AI-agents: Telegram to Obsidian Converter with Smart Search and Note Analysis
+*ИИ-анент: Конвертер Telegram в Obsidian с интеллектуальным поиском и анализом заметок*
 
 Конвертирует экспорт данных Telegram в заметки Obsidian с полной поддержкой медиафайлов, форматирования, группировки по дням и AI-интеграции для умного поиска и аналитики.
 
